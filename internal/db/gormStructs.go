@@ -15,6 +15,16 @@ type Computer struct {
     RAM   string `json:"ram"`
 }
 
+/*
+{
+    "name": "Nagibator",
+    "price": 301,
+    "gpu": "RTX 2080",
+    "cpu": "Intel Core I5 9700k",
+    "ram": "16 gb"
+}
+*/
+
 type User struct {
     gorm.Model
     ID       uint
@@ -74,5 +84,20 @@ type Rent struct {
     Admin      Admin
     ComputerID int       `json:"computer_id"`
     Computer   Computer
+	UserID     int 		 `json:"user_id"`
+	User       User
+	ShiftID    int 		 `json:"shift_id"`
+	Shift	   Shift
 }
+
+/*
+{
+    "start": "2024-05-12T16:00:00Z",
+    "end": "2024-05-12T18:00:00Z",
+    "admin_id": 1,
+    "computer_id": 1,
+    "user_id": 1,
+	"shift_id": 1
+}
+*/
 

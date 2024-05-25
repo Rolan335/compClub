@@ -12,7 +12,6 @@ func InitPcInfo() {
 	if result.Error != nil{
 		fmt.Println(result.Error)
 	}
-	fmt.Println(pc)
 	for _, v := range pc {
 		bytes, _ := json.Marshal(v)
 		err := Rdb.Set(Ctx, v.Name, bytes,0).Err()

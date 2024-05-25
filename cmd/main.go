@@ -34,6 +34,9 @@ func main() {
 	if err := <-errors; err != nil {
 		log.Fatalf("Сервер остановил работу! : %v", err)
 	}
+
+	//test
+	
 }
 
 

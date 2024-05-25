@@ -3,6 +3,7 @@ package controllers
 import (
 	"compClub/internal/db"
 	"compClub/internal/redis"
+	"compClub/internal/rent"
 	"compClub/internal/util/isAdmin"
 	"crypto/sha256"
 	"encoding/json"
@@ -34,6 +35,28 @@ func (c *Controller) RegisterAdmin(w http.ResponseWriter, r *http.Request) {
 		admin.Password = passwordHashed
 
 		insert := db.Db.Create(&admin)
+
+		if insert.Error != nil {
+			log.Default()
+		}
+	}
+}
+
+func (c *Controller) AddNewUser(w http.ResponseWriter, r *http.Request) {
+	if !isAdmin.Check(r) {
+		w.WriteHeader(http.StatusForbidden)
+	} else {
+		user := db.User{}
+		body, _ := io.ReadAll(r.Body)
+		err := json.Unmarshal(body, &user)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+		}
+
+		passwordHashed := fmt.Sprintf("%x", sha256.Sum256([]byte(user.Password)))
+		user.Password = passwordHashed
+
+		insert := db.Db.Create(&user)
 
 		if insert.Error != nil {
 			log.Default()
@@ -103,14 +126,17 @@ func (c *Controller) GetAvailablePc(w http.ResponseWriter, r *http.Request) {
 func (c *Controller) NewRent(w http.ResponseWriter, r *http.Request) {
 	if !isAdmin.Check(r) {
 		w.WriteHeader(http.StatusForbidden)
-	} else{
-		rent := db.Rent{}
+	} else {
+		newRent := db.Rent{}
 		body, _ := io.ReadAll(r.Body)
-		err := json.Unmarshal(body, &rent)
-		if err != nil{
+		err := json.Unmarshal(body, &newRent)
+		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 		}
-		fmt.Println(rent)
+		fmt.Println("pcinfo -")
+		fmt.Println(redis.GetPcInfo(newRent.ComputerID))
+		fmt.Println("rent started. ComputerID -" + fmt.Sprint(newRent.ComputerID))
+		go rent.RentInit(newRent)
 	}
 }
 
