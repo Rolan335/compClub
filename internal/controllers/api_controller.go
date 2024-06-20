@@ -82,16 +82,6 @@ func (c *Controller) AddNewPC(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-/*
-{
-    "name": "Aorta tvoey babushki 2.0",
-    "price": 301,
-    "gpu": "RTX 2080",
-    "cpu": "Intel Core I5 9700k",
-    "ram": "16 gb"
-}
-*/
-
 func (c *Controller) AddNewShift(w http.ResponseWriter, r *http.Request) {
 	if !isAdmin.Check(r) {
 		w.WriteHeader(http.StatusForbidden)
